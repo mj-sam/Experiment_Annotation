@@ -1,0 +1,9 @@
+event_number,participant_id,session_id,stage,event,system_date,system_time,system_timestamp,utc_offset,timezone,utc_timestamp,elapsed_seconds,elapsed_hms,corrects_event,note
+1,1,1,,SESSION_START,2026-10-28,22:20:50.980,2026-10-28T22:20:50.980+01:00,+01:00,Romance Standard Time,2026-10-28T21:20:50.980Z,0.000,00:00:00.000,,
+2,1,1,Question,START,2026-10-28,22:20:54.852,2026-10-28T22:20:54.852+01:00,+01:00,Romance Standard Time,2026-10-28T21:20:54.852Z,3.871,00:00:03.871,,
+3,1,1,Question,FINISH,2026-10-28,22:20:58.696,2026-10-28T22:20:58.696+01:00,+01:00,Romance Standard Time,2026-10-28T21:20:58.696Z,7.715,00:00:07.715,,
+4,1,1,Baseline,START,2026-10-28,22:21:02.466,2026-10-28T22:21:02.466+01:00,+01:00,Romance Standard Time,2026-10-28T21:21:02.466Z,11.485,00:00:11.485,,
+5,1,1,Baseline,FINISH,2026-10-28,22:21:04.016,2026-10-28T22:21:04.016+01:00,+01:00,Romance Standard Time,2026-10-28T21:21:04.016Z,13.036,00:00:13.036,,
+6,1,1,Experiment 1,START,2026-10-28,22:21:11.122,2026-10-28T22:21:11.122+01:00,+01:00,Romance Standard Time,2026-10-28T21:21:11.122Z,20.141,00:00:20.141,,
+7,1,1,Experiment 1,FINISH,2026-10-28,22:21:15.634,2026-10-28T22:21:15.634+01:00,+01:00,Romance Standard Time,2026-10-28T21:21:15.634Z,24.654,00:00:24.654,,
+8,1,1,,SESSION_END,2026-10-28,22:24:44.429,2026-10-28T22:24:44.429+01:00,+01:00,Romance Standard Time,2026-10-28T21:24:44.429Z,233.449,00:03:53.449,,application closed before completion

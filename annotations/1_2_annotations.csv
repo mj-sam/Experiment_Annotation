@@ -1,0 +1,7 @@
+event_number,participant_id,session_id,stage,event,system_date,system_time,system_timestamp,utc_offset,timezone,utc_timestamp,elapsed_seconds,elapsed_hms,corrects_event,note
+1,1,2,,SESSION_START,2026-10-28,22:31:28.095,2026-10-28T22:31:28.095+01:00,+01:00,Romance Standard Time,2026-10-28T21:31:28.095Z,0.000,00:00:00.000,,
+2,1,2,Baseline Questionnair Started,START,2026-10-28,22:31:31.923,2026-10-28T22:31:31.923+01:00,+01:00,Romance Standard Time,2026-10-28T21:31:31.923Z,3.827,00:00:03.827,,
+3,1,2,Baseline Questionnair Started,FINISH,2026-10-28,22:31:35.573,2026-10-28T22:31:35.573+01:00,+01:00,Romance Standard Time,2026-10-28T21:31:35.573Z,7.477,00:00:07.477,,
+4,1,2,Baseline Questionnair Finished,START,2026-10-28,22:31:39.977,2026-10-28T22:31:39.977+01:00,+01:00,Romance Standard Time,2026-10-28T21:31:39.977Z,11.882,00:00:11.882,,
+5,1,2,Baseline Questionnair Finished,FINISH,2026-10-28,22:31:45.674,2026-10-28T22:31:45.674+01:00,+01:00,Romance Standard Time,2026-10-28T21:31:45.674Z,17.579,00:00:17.579,,
+6,1,2,,SESSION_END,2026-10-28,22:31:51.766,2026-10-28T22:31:51.766+01:00,+01:00,Romance Standard Time,2026-10-28T21:31:51.766Z,23.671,00:00:23.671,,application closed before completion

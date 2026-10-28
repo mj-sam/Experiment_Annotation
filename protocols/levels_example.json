@@ -1,0 +1,12 @@
+{
+  "name": "Three-level experiment",
+  "stages": [
+    "Baseline",
+    "Level 1",
+    "Rest 1",
+    "Level 2",
+    "Rest 2",
+    "Level 3",
+    "Recovery"
+  ]
+}

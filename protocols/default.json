@@ -1,0 +1,11 @@
+{
+  "name": "Default protocol",
+  "stages": [
+    "Baseline Questionnair",
+    "Baseline Recording",
+    "VR Experiment",
+    "VR Questionnair",
+    "AR Experiment",
+    "AR Questionnair"
+  ]
+}

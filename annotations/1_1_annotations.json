@@ -1,0 +1,258 @@
+{
+    "schema_version":  1,
+    "participant_id":  "1",
+    "session_id":  "1",
+    "protocol":  [
+                     "Question",
+                     "Baseline",
+                     "Experiment 1",
+                     "Q1",
+                     "Recording Q2",
+                     "Experiment 2",
+                     "Questions 2",
+                     "Recording 2"
+                 ],
+    "status":  "ended_incomplete",
+    "session_start":  {
+                          "system_timestamp":  "2026-10-28T22:20:50.980+01:00",
+                          "utc_timestamp":  "2026-10-28T21:20:50.980Z",
+                          "utc_offset":  "+01:00",
+                          "timezone":  "Romance Standard Time"
+                      },
+    "total_duration_seconds":  24.654,
+    "all_stages_verified":  false,
+    "stage_summary":  [
+                          {
+                              "stage":  "Question",
+                              "start_timestamp":  "2026-10-28T22:20:54.852+01:00",
+                              "finish_timestamp":  "2026-10-28T22:20:58.696+01:00",
+                              "duration_seconds":  3.844,
+                              "ok":  true,
+                              "issues":  [
+
+                                         ]
+                          },
+                          {
+                              "stage":  "Baseline",
+                              "start_timestamp":  "2026-10-28T22:21:02.466+01:00",
+                              "finish_timestamp":  "2026-10-28T22:21:04.016+01:00",
+                              "duration_seconds":  1.551,
+                              "ok":  true,
+                              "issues":  [
+
+                                         ]
+                          },
+                          {
+                              "stage":  "Experiment 1",
+                              "start_timestamp":  "2026-10-28T22:21:11.122+01:00",
+                              "finish_timestamp":  "2026-10-28T22:21:15.634+01:00",
+                              "duration_seconds":  4.513,
+                              "ok":  true,
+                              "issues":  [
+
+                                         ]
+                          },
+                          {
+                              "stage":  "Q1",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "Recording Q2",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "Experiment 2",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "Questions 2",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "Recording 2",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          }
+                      ],
+    "events":  [
+                   {
+                       "event_number":  1,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "",
+                       "event":  "SESSION_START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:20:50.980",
+                       "system_timestamp":  "2026-10-28T22:20:50.980+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:20:50.980Z",
+                       "elapsed_seconds":  0,
+                       "elapsed_hms":  "00:00:00.000",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  2,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "Question",
+                       "event":  "START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:20:54.852",
+                       "system_timestamp":  "2026-10-28T22:20:54.852+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:20:54.852Z",
+                       "elapsed_seconds":  3.871,
+                       "elapsed_hms":  "00:00:03.871",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  3,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "Question",
+                       "event":  "FINISH",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:20:58.696",
+                       "system_timestamp":  "2026-10-28T22:20:58.696+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:20:58.696Z",
+                       "elapsed_seconds":  7.715,
+                       "elapsed_hms":  "00:00:07.715",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  4,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "Baseline",
+                       "event":  "START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:21:02.466",
+                       "system_timestamp":  "2026-10-28T22:21:02.466+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:21:02.466Z",
+                       "elapsed_seconds":  11.485,
+                       "elapsed_hms":  "00:00:11.485",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  5,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "Baseline",
+                       "event":  "FINISH",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:21:04.016",
+                       "system_timestamp":  "2026-10-28T22:21:04.016+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:21:04.016Z",
+                       "elapsed_seconds":  13.036,
+                       "elapsed_hms":  "00:00:13.036",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  6,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "Experiment 1",
+                       "event":  "START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:21:11.122",
+                       "system_timestamp":  "2026-10-28T22:21:11.122+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:21:11.122Z",
+                       "elapsed_seconds":  20.141,
+                       "elapsed_hms":  "00:00:20.141",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  7,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "Experiment 1",
+                       "event":  "FINISH",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:21:15.634",
+                       "system_timestamp":  "2026-10-28T22:21:15.634+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:21:15.634Z",
+                       "elapsed_seconds":  24.654,
+                       "elapsed_hms":  "00:00:24.654",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  8,
+                       "participant_id":  "1",
+                       "session_id":  "1",
+                       "stage":  "",
+                       "event":  "SESSION_END",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:24:44.429",
+                       "system_timestamp":  "2026-10-28T22:24:44.429+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:24:44.429Z",
+                       "elapsed_seconds":  233.449,
+                       "elapsed_hms":  "00:03:53.449",
+                       "corrects_event":  null,
+                       "note":  "application closed before completion",
+                       "voided":  false
+                   }
+               ],
+    "last_written":  "2026-10-28T22:24:44.437+01:00"
+}

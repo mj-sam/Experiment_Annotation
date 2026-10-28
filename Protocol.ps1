@@ -1,20 +1,68 @@
 # Protocol.ps1 - experiment protocol + state management (no GUI, no file I/O).
 
 # ---------------------------------------------------------------------------
-# CONFIGURATION - edit the stage list here. Names must be unique.
+# PROTOCOL LOADING. A protocol is a named, ordered list of unique stage names.
+# Accepted sources: .json file ({"name": "...", "stages": [...]} or a bare array;
+# stages may be strings or {"name": "..."} objects), .txt file (one stage per line,
+# # = comment) or an inline JSON string. See the protocols/ folder for examples.
 # ---------------------------------------------------------------------------
-$Script:Stages = @(
-    'Question',
-    'Baseline',
-    'Experiment 1',
-    'Q1',
-    'Recording Q2',
-    'Experiment 2',
-    'Questions 2',
-    'Recording 2'
-)
-$Script:OutputDirName   = 'annotations'   # created next to the application
-$Script:MinClickInterval = 0.5            # seconds; faster repeat presses are ignored
+$Script:OutputDirName    = 'annotations'   # created next to the application
+$Script:ProtocolDirName  = 'protocols'     # protocol files offered in the GUI
+$Script:MinClickInterval = 0.5             # seconds; faster repeat presses are ignored
+$Script:BuiltInProtocol  = @{
+    Name   = 'Built-in default'
+    Source = '(built-in)'
+    Stages = [string[]]@('Question', 'Baseline', 'Experiment 1', 'Q1', 'Recording Q2', 'Experiment 2', 'Questions 2', 'Recording 2')
+}
+
+function Read-Protocol([string]$source) {
+    $text = $source.Trim()
+    $name = 'Custom protocol'; $label = '(inline)'; $isTxt = $false
+    if ($text.StartsWith('{') -or $text.StartsWith('[')) {
+        $raw = $text
+    } else {
+        if (-not (Test-Path -LiteralPath $source -PathType Leaf)) { throw "Protocol file not found: $source" }
+        $full = (Resolve-Path -LiteralPath $source).Path
+        $raw = [System.IO.File]::ReadAllText($full, [System.Text.Encoding]::UTF8)
+        $name = [System.IO.Path]::GetFileNameWithoutExtension($full)
+        $label = $full
+        $isTxt = ([System.IO.Path]::GetExtension($full) -eq '.txt')
+    }
+
+    $items = @()
+    if ($isTxt) {
+        $items = @($raw -split "`r?`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' -and -not $_.StartsWith('#') })
+    } else {
+        try { $obj = ConvertFrom-Json -InputObject $raw } catch { throw "Invalid JSON in protocol: $($_.Exception.Message)" }
+        if ($obj -is [string]) { $items = @($obj) }
+        elseif ($obj -is [array]) { $items = @($obj) }
+        elseif ($obj.PSObject.Properties['stages']) {
+            $items = @($obj.stages)
+            if ($obj.PSObject.Properties['name'] -and "$($obj.name)".Trim() -ne '') { $name = "$($obj.name)".Trim() }
+        } else { throw 'Protocol JSON needs a "stages" list.' }
+    }
+
+    $stages = New-Object System.Collections.Generic.List[string]
+    $seen = @{}
+    foreach ($it in $items) {
+        if ($it -is [string]) { $n = $it.Trim() }
+        elseif ($it.PSObject.Properties['name']) { $n = "$($it.name)".Trim() }
+        else { throw 'Each stage must be a text or an object with a "name".' }
+        if ($n -eq '') { throw 'A stage name is empty.' }
+        if ($n.Length -gt 60) { throw "Stage name too long (max 60): $n" }
+        if ($seen.ContainsKey($n.ToLowerInvariant())) { throw "Duplicate stage name: $n" }
+        $seen[$n.ToLowerInvariant()] = $true
+        $stages.Add($n)
+    }
+    if ($stages.Count -lt 1) { throw 'The protocol has no stages.' }
+    if ($stages.Count -gt 40) { throw 'The protocol has more than 40 stages.' }
+    return @{ Name = $name; Source = $label; Stages = [string[]]$stages.ToArray() }
+}
+
+function Get-ProtocolFiles([string]$dir) {
+    if (-not (Test-Path -LiteralPath $dir)) { return @() }
+    return @(Get-ChildItem -LiteralPath $dir -File | Where-Object { $_.Extension -in '.json', '.txt' } | Sort-Object Name)
+}
 
 # ---------------------------------------------------------------------------
 # Session: append-only event list + state derived from it.
@@ -25,6 +73,8 @@ $Script:MinClickInterval = 0.5            # seconds; faster repeat presses are i
 class Session {
     [string]$ParticipantId
     [string]$SessionId
+    [string]$ProtocolName
+    [string]$ProtocolSource
     [string[]]$Stages
     [System.Collections.ArrayList]$Events
     [double]$StartMono
@@ -32,10 +82,12 @@ class Session {
     [string]$EndKind
     [double]$LastPress
 
-    Session([string]$p, [string]$s, [string[]]$stages) {
+    Session([string]$p, [string]$s, [object]$protocol) {
         $this.ParticipantId = $p
         $this.SessionId = $s
-        $this.Stages = $stages
+        $this.Stages = [string[]]$protocol.Stages
+        $this.ProtocolName = [string]$protocol.Name
+        $this.ProtocolSource = [string]$protocol.Source
         $this.Events = New-Object System.Collections.ArrayList
         $this.LastPress = -1000.0
         $this.Ended = $false
@@ -132,6 +184,6 @@ class Session {
     }
 }
 
-function New-Session([string]$participant, [string]$sessionId) {
-    return [Session]::new($participant, $sessionId, $Script:Stages)
+function New-Session([string]$participant, [string]$sessionId, $protocol) {
+    return [Session]::new($participant, $sessionId, $protocol)
 }

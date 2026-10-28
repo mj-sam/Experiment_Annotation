@@ -1,0 +1,5 @@
+# One stage per line. Lines starting with # are ignored.
+Baseline
+Task A
+Task B
+Recovery

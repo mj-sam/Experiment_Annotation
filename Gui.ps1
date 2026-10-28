@@ -1,7 +1,7 @@
 # Gui.ps1 - WinForms interface. Contains no protocol rules: it asks $Script:App.Session.
 # NOTE: keep this file ASCII-only (Windows PowerShell 5.1 reads BOM-less files as ANSI).
 
-$Script:App = @{ Session = $null; Files = $null; Locked = $false }
+$Script:App = @{ Session = $null; Files = $null; Locked = $false; Protocol = $null; Suppress = $false; ProtocolPaths = @{} }
 
 $CH_CHECK = [string][char]0x2713
 $CH_ARROW = [string][char]0x2192
@@ -67,6 +67,32 @@ function Invoke-Action($stamp) {
     $a.UnlockTimer.Start()
 }
 
+function Get-NextSessionId([string]$sid) {
+    if ($sid -match '^(.*?)(\d+)$') {
+        $num = ([int64]$Matches[2] + 1).ToString().PadLeft($Matches[2].Length, '0')
+        return $Matches[1] + $num
+    }
+    return $sid
+}
+
+# Back to the setup screen. Participant/session IDs are kept (session ID optionally incremented).
+function Return-ToSetup([bool]$nextSession) {
+    $a = $Script:App
+    $sid = $a.SidBox.Text
+    if ($a.Session) { $sid = $a.Session.SessionId; $a.PidBox.Text = $a.Session.ParticipantId }
+    if ($nextSession) { $sid = Get-NextSessionId $sid }
+    $a.SidBox.Text = $sid
+    $a.Session = $null; $a.Files = $null; $a.Locked = $false
+    $a.Log.Clear()
+    Update-View
+}
+
+# One button: "Start Session" when idle, "New Session" once the previous one has finished.
+function Invoke-StartOrNew {
+    $a = $Script:App
+    if ($a.Session) { Return-ToSetup $true } else { Invoke-StartSession }
+}
+
 function Invoke-StartSession {
     $stamp = Get-Stamp
     $a = $Script:App
@@ -77,7 +103,7 @@ function Invoke-StartSession {
     }
     $files = New-LogFiles (Join-Path $Script:AppRoot $Script:OutputDirName) $pid_ $sid
     $a.Files = $files
-    $a.Session = New-Session $pid_ $sid
+    $a.Session = New-Session $pid_ $sid $a.Protocol
     $ev = $a.Session.BeginSession($stamp)
     Save-OrWarn $ev
     $a.Log.Clear()
@@ -124,10 +150,63 @@ function Invoke-Reset {
         $ev = $a.Session.EndSession($stamp, 'SESSION_RESET', 'experiment reset by operator')
         Save-OrWarn $ev
     }
-    $a.Session = $null; $a.Files = $null; $a.Locked = $false
-    $a.Log.Clear()
-    $a.PidBox.Text = ''; $a.SidBox.Text = ''
+    Return-ToSetup ($a.Session.Phase() -eq 'completed' -or $a.Session.EndKind -eq 'SESSION_END')
+}
+
+# ----------------------------------------------------------------------------- protocol loading
+function Build-Strip {
+    $a = $Script:App
+    $stages = $a.Protocol.Stages
+    $a.Strip.SuspendLayout()
+    $a.Strip.Controls.Clear()
+    $a.StageLabels = @()
+    for ($i = 0; $i -lt $stages.Count; $i++) {
+        $l = New-Ctl System.Windows.Forms.Label @{ AutoSize = $true; Padding = '8,6,8,6'; Margin = '0,4,0,4'; Text = $stages[$i] }
+        $a.StageLabels += $l
+        $a.Strip.Controls.Add($l)
+        if ($i -lt $stages.Count - 1) {
+            $a.Strip.Controls.Add((New-Ctl System.Windows.Forms.Label @{ AutoSize = $true; Text = $CH_ARROW; Padding = '2,8,2,0'; ForeColor = $Pal.TodoText }))
+        }
+    }
+    $a.Strip.ResumeLayout()
+}
+
+function Set-Protocol($protocol, [string]$comboText) {
+    $a = $Script:App
+    $a.Protocol = $protocol
+    $a.Suppress = $true
+    if ($comboText) {
+        if ($a.ProtoCombo.Items.IndexOf($comboText) -lt 0) { [void]$a.ProtoCombo.Items.Add($comboText) }
+        $a.ProtoCombo.SelectedItem = $comboText
+    }
+    $a.Suppress = $false
+    $a.ProtoInfo.Text = '{0} stages' -f $protocol.Stages.Count
+    Build-Strip
     Update-View
+}
+
+# Load from a file/inline JSON. On failure the current protocol stays active.
+function Load-ProtocolFrom([string]$source, [string]$comboText) {
+    try { $p = Read-Protocol $source }
+    catch {
+        Msg ("Could not load the protocol:`n`n" + $_.Exception.Message) 'Protocol error' 'OK' 'Warning' | Out-Null
+        return $false
+    }
+    if (-not $comboText) { $comboText = $p.Name }
+    $a = $Script:App
+    $a.ProtocolPaths[$comboText] = $source
+    Set-Protocol $p $comboText
+    return $true
+}
+
+function Invoke-BrowseProtocol {
+    $dlg = New-Object System.Windows.Forms.OpenFileDialog
+    $dlg.Title = 'Load experiment protocol'
+    $dlg.Filter = 'Protocol files (*.json;*.txt)|*.json;*.txt|All files (*.*)|*.*'
+    $dlg.InitialDirectory = Join-Path $Script:AppRoot $Script:ProtocolDirName
+    if ($dlg.ShowDialog() -eq 'OK') {
+        [void](Load-ProtocolFrom $dlg.FileName ([System.IO.Path]::GetFileName($dlg.FileName)))
+    }
 }
 
 function Open-DataFolder {
@@ -166,7 +245,7 @@ function Show-Summary($session) {
         $rt.SelectionFont = (Font 22 $true); $rt.SelectionColor = $Pal.Bad
         $rt.AppendText("Session ended - INCOMPLETE`r`n")
     }
-    W ('Participant {0}    Session {1}' -f $session.ParticipantId, $session.SessionId) $black
+    W ('Participant {0}    Session {1}    Protocol: {2}' -f $session.ParticipantId, $session.SessionId, $session.ProtocolName) $black
     W ('Total session duration: {0}' -f $r.TotalHms) $black $true
     W '' $black
     W ('{0,-14} {1,-13} {2,-13} {3,-13} {4}' -f 'Stage', 'Start', 'Finish', 'Duration', 'Check') $black $true
@@ -188,15 +267,20 @@ function Show-Summary($session) {
 function Update-View {
     $a = $Script:App
     $s = $a.Session
-    $stages = $Script:Stages
     $idle = ($null -eq $s)
-
-    $a.PidBox.Enabled = $idle; $a.SidBox.Enabled = $idle; $a.StartBtn.Enabled = $idle
-    $a.CorrectBtn.Enabled = $false; $a.EndBtn.Enabled = $false
-    $a.ResetBtn.Enabled = (-not $idle)
+    $stages = $a.Protocol.Stages
+    if (-not $idle) { $stages = $s.Stages }
 
     $phase = 'idle'; $n = 0
     if (-not $idle) { $phase = $s.Phase(); $n = @($s.ValidEvents()).Count }
+    $finished = ($phase -eq 'completed' -or $phase -eq 'ended')
+
+    $a.PidBox.Enabled = $idle; $a.SidBox.Enabled = $idle
+    $a.ProtoCombo.Enabled = $idle; $a.ProtoBrowse.Enabled = $idle
+    $a.StartBtn.Enabled = ($idle -or $finished)
+    if ($finished) { $a.StartBtn.Text = 'New Session' } else { $a.StartBtn.Text = 'Start Session' }
+    $a.CorrectBtn.Enabled = $false; $a.EndBtn.Enabled = $false
+    $a.ResetBtn.Enabled = ($phase -eq 'ready' -or $phase -eq 'running')
     $done = [int][math]::Floor($n / 2)
 
     # progress strip
@@ -278,7 +362,7 @@ function Start-Gui {
         Font = (Font 11); BackColor = [System.Drawing.Color]::White
     }
     $root = New-Ctl System.Windows.Forms.TableLayoutPanel @{ Dock = 'Fill'; ColumnCount = 1; RowCount = 5 }
-    foreach ($h in 100, 120) { [void]$root.RowStyles.Add((New-Object System.Windows.Forms.RowStyle('Absolute', $h))) }
+    foreach ($h in 140, 120) { [void]$root.RowStyles.Add((New-Object System.Windows.Forms.RowStyle('Absolute', $h))) }
     [void]$root.RowStyles.Add((New-Object System.Windows.Forms.RowStyle('Percent', 100)))
     foreach ($h in 190, 60) { [void]$root.RowStyles.Add((New-Object System.Windows.Forms.RowStyle('Absolute', $h))) }
     $form.Controls.Add($root)
@@ -292,21 +376,16 @@ function Start-Gui {
     $a.StartBtn = New-Ctl System.Windows.Forms.Button @{ Text = 'Start Session'; Location = '376,26'; Size = '160,50'; Font = (Font 13 $true); BackColor = $Pal.Next; ForeColor = [System.Drawing.Color]::White; FlatStyle = 'Flat' }
     $a.SessionStatus = New-Ctl System.Windows.Forms.Label @{ Text = 'Session: not started'; Location = '556,38'; AutoSize = $true; Font = (Font 13 $true) }
     $a.Clock = New-Ctl System.Windows.Forms.Label @{ Dock = 'Right'; Width = 330; TextAlign = 'MiddleRight'; Font = (Font 17 $true 'Consolas'); Padding = '0,0,12,0' }
-    foreach ($c in $a.PidBox, $a.SidBox, $a.StartBtn, $a.SessionStatus, $a.Clock) { $top.Controls.Add($c) }
+    $top.Controls.Add((New-Ctl System.Windows.Forms.Label @{ Text = 'Protocol'; Location = '14,92'; AutoSize = $true }))
+    $a.ProtoCombo = New-Ctl System.Windows.Forms.ComboBox @{ Location = '84,88'; Width = 270; DropDownStyle = 'DropDownList' }
+    $a.ProtoBrowse = New-Ctl System.Windows.Forms.Button @{ Text = 'Load file...'; Location = '366,86'; Size = '110,32' }
+    $a.ProtoInfo = New-Ctl System.Windows.Forms.Label @{ Text = ''; Location = '490,92'; AutoSize = $true; ForeColor = $Pal.TodoText }
+    foreach ($c in $a.PidBox, $a.SidBox, $a.StartBtn, $a.SessionStatus, $a.Clock, $a.ProtoCombo, $a.ProtoBrowse, $a.ProtoInfo) { $top.Controls.Add($c) }
     $root.Controls.Add($top, 0, 0)
 
-    # --- progress strip
-    $strip = New-Ctl System.Windows.Forms.FlowLayoutPanel @{ Dock = 'Fill'; Padding = '10,12,10,0'; WrapContents = $true }
-    $a.StageLabels = @()
-    for ($i = 0; $i -lt $Script:Stages.Count; $i++) {
-        $l = New-Ctl System.Windows.Forms.Label @{ AutoSize = $true; Padding = '8,6,8,6'; Margin = '0,4,0,4'; Text = $Script:Stages[$i] }
-        $a.StageLabels += $l
-        $strip.Controls.Add($l)
-        if ($i -lt $Script:Stages.Count - 1) {
-            $strip.Controls.Add((New-Ctl System.Windows.Forms.Label @{ AutoSize = $true; Text = $CH_ARROW; Padding = '2,8,2,0'; ForeColor = $Pal.TodoText }))
-        }
-    }
-    $root.Controls.Add($strip, 0, 1)
+    # --- progress strip (rebuilt whenever a protocol is loaded)
+    $a.Strip = New-Ctl System.Windows.Forms.FlowLayoutPanel @{ Dock = 'Fill'; Padding = '10,12,10,0'; WrapContents = $true }
+    $root.Controls.Add($a.Strip, 0, 1)
 
     # --- centre: main controls / summary share one cell
     $centre = New-Ctl System.Windows.Forms.Panel @{ Dock = 'Fill'; Padding = '16,6,16,6' }
@@ -348,7 +427,18 @@ function Start-Gui {
 
     # --- events (the timestamp is the FIRST statement of each action handler)
     $a.ActionBtn.Add_Click({ $stamp = Get-Stamp; Invoke-Action $stamp })
-    $a.StartBtn.Add_Click({ Invoke-StartSession })
+    $a.StartBtn.Add_Click({ Invoke-StartOrNew })
+    $a.ProtoBrowse.Add_Click({ Invoke-BrowseProtocol })
+    $a.ProtoCombo.Add_SelectedIndexChanged({
+        $a2 = $Script:App
+        if ($a2.Suppress -or $null -eq $a2.ProtoCombo.SelectedItem) { return }
+        $key = [string]$a2.ProtoCombo.SelectedItem
+        $prev = $a2.Protocol
+        if (-not (Load-ProtocolFrom $a2.ProtocolPaths[$key] $key)) {
+            # failed: restore the previous selection
+            $a2.Suppress = $true; $a2.ProtoCombo.SelectedItem = $prev.Name; $a2.Suppress = $false
+        }
+    })
     $a.CorrectBtn.Add_Click({ Invoke-Correct })
     $a.EndBtn.Add_Click({ Invoke-EndSession })
     $a.ResetBtn.Add_Click({ Invoke-Reset })
@@ -366,6 +456,22 @@ function Start-Gui {
     })
 
     $a.Form = $form
+
+    # --- initial protocol: command-line/inline source > protocols\default.* > first file > built-in
+    $files = Get-ProtocolFiles (Join-Path $Script:AppRoot $Script:ProtocolDirName)
+    foreach ($f in $files) { $a.ProtocolPaths[$f.Name] = $f.FullName; [void]$a.ProtoCombo.Items.Add($f.Name) }
+    $loaded = $false
+    if ($Script:ProtocolArg) {
+        $label = $null
+        if (Test-Path -LiteralPath $Script:ProtocolArg -PathType Leaf) { $label = [System.IO.Path]::GetFileName($Script:ProtocolArg) } else { $label = 'Inline protocol' }
+        $loaded = Load-ProtocolFrom $Script:ProtocolArg $label
+    }
+    if (-not $loaded) {
+        $def = $files | Where-Object { $_.BaseName -eq 'default' } | Select-Object -First 1
+        if (-not $def) { $def = $files | Select-Object -First 1 }
+        if ($def) { $loaded = Load-ProtocolFrom $def.FullName $def.Name }
+    }
+    if (-not $loaded) { Set-Protocol $Script:BuiltInProtocol $null }
     Update-View
     Update-Clocks
     $a.ClockTimer.Start()

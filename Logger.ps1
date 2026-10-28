@@ -95,6 +95,8 @@ function Save-Json($files, $session) {
         schema_version         = 1
         participant_id         = $session.ParticipantId
         session_id             = $session.SessionId
+        protocol_name          = $session.ProtocolName
+        protocol_source        = $session.ProtocolSource
         protocol               = @($session.Stages)
         status                 = (Get-StatusText $session)
         session_start          = [ordered]@{

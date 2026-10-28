@@ -1,0 +1,273 @@
+{
+    "schema_version":  1,
+    "participant_id":  "1",
+    "session_id":  "2",
+    "protocol_name":  "Default protocol",
+    "protocol_source":  "C:\\Users\\samer\\OneDrive - KU Leuven\\Projects\\Ghent_UZ_Parkinson\\experiment_annotator\\protocols\\default.json",
+    "protocol":  [
+                     "Baseline Questionnair Started",
+                     "Baseline Questionnair Finished",
+                     "Baseline Recording Started",
+                     "Baseline Recording Finished",
+                     "VR Experiment Started",
+                     "VR Experiment Finished",
+                     "VR Questionnair Started",
+                     "VR Questionnair Finished",
+                     "AR Experiment Started",
+                     "AR Experiment Finished",
+                     "AR Questionnair Started",
+                     "AR Questionnair Finished"
+                 ],
+    "status":  "ended_incomplete",
+    "session_start":  {
+                          "system_timestamp":  "2026-10-28T22:31:28.095+01:00",
+                          "utc_timestamp":  "2026-10-28T21:31:28.095Z",
+                          "utc_offset":  "+01:00",
+                          "timezone":  "Romance Standard Time"
+                      },
+    "total_duration_seconds":  17.579,
+    "all_stages_verified":  false,
+    "stage_summary":  [
+                          {
+                              "stage":  "Baseline Questionnair Started",
+                              "start_timestamp":  "2026-10-28T22:31:31.923+01:00",
+                              "finish_timestamp":  "2026-10-28T22:31:35.573+01:00",
+                              "duration_seconds":  3.65,
+                              "ok":  true,
+                              "issues":  [
+
+                                         ]
+                          },
+                          {
+                              "stage":  "Baseline Questionnair Finished",
+                              "start_timestamp":  "2026-10-28T22:31:39.977+01:00",
+                              "finish_timestamp":  "2026-10-28T22:31:45.674+01:00",
+                              "duration_seconds":  5.697,
+                              "ok":  true,
+                              "issues":  [
+
+                                         ]
+                          },
+                          {
+                              "stage":  "Baseline Recording Started",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "Baseline Recording Finished",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "VR Experiment Started",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "VR Experiment Finished",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "VR Questionnair Started",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "VR Questionnair Finished",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "AR Experiment Started",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "AR Experiment Finished",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "AR Questionnair Started",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          },
+                          {
+                              "stage":  "AR Questionnair Finished",
+                              "start_timestamp":  null,
+                              "finish_timestamp":  null,
+                              "duration_seconds":  null,
+                              "ok":  false,
+                              "issues":  [
+                                             "START missing",
+                                             "FINISH missing"
+                                         ]
+                          }
+                      ],
+    "events":  [
+                   {
+                       "event_number":  1,
+                       "participant_id":  "1",
+                       "session_id":  "2",
+                       "stage":  "",
+                       "event":  "SESSION_START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:31:28.095",
+                       "system_timestamp":  "2026-10-28T22:31:28.095+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:31:28.095Z",
+                       "elapsed_seconds":  0,
+                       "elapsed_hms":  "00:00:00.000",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  2,
+                       "participant_id":  "1",
+                       "session_id":  "2",
+                       "stage":  "Baseline Questionnair Started",
+                       "event":  "START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:31:31.923",
+                       "system_timestamp":  "2026-10-28T22:31:31.923+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:31:31.923Z",
+                       "elapsed_seconds":  3.827,
+                       "elapsed_hms":  "00:00:03.827",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  3,
+                       "participant_id":  "1",
+                       "session_id":  "2",
+                       "stage":  "Baseline Questionnair Started",
+                       "event":  "FINISH",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:31:35.573",
+                       "system_timestamp":  "2026-10-28T22:31:35.573+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:31:35.573Z",
+                       "elapsed_seconds":  7.477,
+                       "elapsed_hms":  "00:00:07.477",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  4,
+                       "participant_id":  "1",
+                       "session_id":  "2",
+                       "stage":  "Baseline Questionnair Finished",
+                       "event":  "START",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:31:39.977",
+                       "system_timestamp":  "2026-10-28T22:31:39.977+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:31:39.977Z",
+                       "elapsed_seconds":  11.882,
+                       "elapsed_hms":  "00:00:11.882",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  5,
+                       "participant_id":  "1",
+                       "session_id":  "2",
+                       "stage":  "Baseline Questionnair Finished",
+                       "event":  "FINISH",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:31:45.674",
+                       "system_timestamp":  "2026-10-28T22:31:45.674+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:31:45.674Z",
+                       "elapsed_seconds":  17.579,
+                       "elapsed_hms":  "00:00:17.579",
+                       "corrects_event":  null,
+                       "note":  "",
+                       "voided":  false
+                   },
+                   {
+                       "event_number":  6,
+                       "participant_id":  "1",
+                       "session_id":  "2",
+                       "stage":  "",
+                       "event":  "SESSION_END",
+                       "system_date":  "2026-10-28",
+                       "system_time":  "22:31:51.766",
+                       "system_timestamp":  "2026-10-28T22:31:51.766+01:00",
+                       "utc_offset":  "+01:00",
+                       "timezone":  "Romance Standard Time",
+                       "utc_timestamp":  "2026-10-28T21:31:51.766Z",
+                       "elapsed_seconds":  23.671,
+                       "elapsed_hms":  "00:00:23.671",
+                       "corrects_event":  null,
+                       "note":  "application closed before completion",
+                       "voided":  false
+                   }
+               ],
+    "last_written":  "2026-10-28T22:31:51.775+01:00"
+}
